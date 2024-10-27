@@ -4,6 +4,7 @@ dotenv.config();
 
 export const verifyToken = (req, res, next) => {
     const token = req.cookies.access_token || req.headers.authorization?.split(' ')[1]; // Ensure the cookie is being sent in the request
+    console.log("check token", token);
     if (!token) {
         return res.status(401).json({ msg: 'No token, authorization denied check' });
     }

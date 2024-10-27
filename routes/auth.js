@@ -49,6 +49,8 @@ router.post('/login', async (req, res) => {
         const {password, ...otherDetails} = user._doc;
         res.cookie('access_token', token,{
             httpOnly: true,
+            secure:true,
+            sameSite: 'None'
         })
         .status(200)
         .json({details:{...otherDetails}, token});
