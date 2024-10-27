@@ -23,7 +23,7 @@ router.post('/create', verifyUser, async (req, res) => {
 
 
 // Get all events for the logged-in user
-router.get('/', verifyToken, async (req, res) => {
+router.get('/',  async (req, res) => {
     try {
         const events = await Event.find({ organizer: req.user._id });
         res.status(200).json(events);
