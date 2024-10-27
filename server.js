@@ -28,7 +28,7 @@ mongoose.connection.on("disconnected", () => {
 
 // middleWare
 app.use(cors({
-    origin: 'event-management-system-frontend-liart.vercel.app', // Allow requests from this origin
+    origin: 'https://event-management-system-frontend-liart.vercel.app', // Allow requests from this origin
     methods: 'GET,POST,PUT,DELETE', // Allow these HTTP methods
     credentials: true, // Allow credentials (e.g., cookies)
 }));
