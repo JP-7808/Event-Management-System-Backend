@@ -6,6 +6,9 @@ dotenv.config();
 
 const router = express.Router();
 
+// Debug: Log the environment variables
+console.log('RAZORPAY_KEY_ID:', process.env.RAZORPAY_KEY_ID);
+console.log('RAZORPAY_KEY_SECRET:', process.env.RAZORPAY_KEY_SECRET);
 // Initialize Razorpay instance
 const razorpayInstance = new Razorpay({
     key_id: process.env.RAZORPAY_KEY_ID,
