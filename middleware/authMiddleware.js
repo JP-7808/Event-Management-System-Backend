@@ -6,7 +6,7 @@ export const verifyToken = (req, res, next) => {
     const token = req.cookies.access_token; // Ensure the cookie is being sent in the request
 
     if (!token) {
-        return res.status(401).json({ msg: 'No token, authorization denied' });
+        return res.status(401).json({ msg: 'No token, authorization denied check' });
     }
 
     jwt.verify(token, process.env.JWT_SECRET, (error, user) => { // Make sure you use the correct JWT_SECRET
