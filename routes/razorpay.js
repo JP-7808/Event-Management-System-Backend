@@ -1,6 +1,6 @@
 import Razorpay from 'razorpay';
-import express from 'express'
-import dotenv from 'dotenv'
+import express from 'express';
+import dotenv from 'dotenv';
 
 dotenv.config();
 
@@ -8,8 +8,8 @@ const router = express.Router();
 
 // Initialize Razorpay instance
 const razorpayInstance = new Razorpay({
-    key_id: process.env.RAZORPAY_KEY_ID,
-    key_secret: process.env.RAZORPAY_KEY_SECRET,
+    key_id: "rzp_live_Egt4Xg9w6VBRsl",
+    key_secret: "BrFCbMGJSgKFbouMPegunZaP",
 });
 
 // Endpoint to create order
