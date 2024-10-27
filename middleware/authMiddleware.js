@@ -21,7 +21,7 @@ export const verifyToken = (req, res, next) => {
 
 const verifyUser = (req, res, next) => {
     verifyToken(req, res, () => {
-        if (req.user.id === req.params.id) {
+        if (req.user._id === req.params.id) {
             next();
         } else {
             return res.status(403).json({ msg: 'Authorization denied' });

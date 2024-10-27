@@ -6,7 +6,7 @@ import verifyUser from '../middleware/authMiddleware.js';
 const router = express.Router();
 
 // Create Event Route
-router.post('/create', verifyUser, async (req, res) => {
+router.post('/create', verifyToken, async (req, res) => {
     try {
       const { title, description, date, time, location, ticketPrice, privacy } = req.body;
       const organizerId = req.user.id;
