@@ -4,7 +4,6 @@ dotenv.config();
 
 export const verifyToken = (req, res, next) => {
     const token = req.cookies.access_token || req.headers.authorization?.split(' ')[1]; // Ensure the cookie is being sent in the request
-    console.log("token hai" , token);
     if (!token) {
         return res.status(401).json({ msg: 'No token, authorization denied check' });
     }
@@ -22,7 +21,7 @@ export const verifyToken = (req, res, next) => {
 
 const verifyUser = (req, res, next) => {
     verifyToken(req, res, () => {
-        if (req.user._id === req.params.id) {
+        if (req.user.id === req.params.id) {
             next();
         } else {
             return res.status(403).json({ msg: 'Authorization denied' });
