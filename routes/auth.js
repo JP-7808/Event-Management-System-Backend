@@ -86,9 +86,9 @@ router.get('/google/callback', passport.authenticate('google', { session: false 
     // Set the token in an HTTP-only cookie for security
     res.cookie('access_token', token, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'strict',
-    }).redirect('https://event-management-system-frontend-liart.vercel.app/dashboard'); // Redirect to frontend with dashboard
+        secure: true,
+        sameSite: 'None', // Allows the cookie to be sent across domains
+    }).redirect('https://event-management-system-frontend-liart.vercel.app/dashboard');
 });
 
 
