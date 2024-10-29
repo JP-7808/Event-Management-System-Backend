@@ -86,9 +86,20 @@ router.get('/google/callback', passport.authenticate('google', { session: false 
     // Set the token in an HTTP-only cookie for security
     res.cookie('access_token', token, {
         httpOnly: true,
-        secure: true,
-        sameSite: 'None', // Allows the cookie to be sent across domains
-    }).redirect('https://event-management-system-frontend-liart.vercel.app/dashboard');
+        secure: true, // Set to false if you're testing locally without HTTPS
+        sameSite: 'None',
+    });
+
+    // Return user details in response as well
+    res.status(200).json({
+        user: {
+            id: user._id,
+            name: user.name,
+            email: user.email,
+            googleId: user.googleId
+        },
+        token: token
+    });
 });
 
 
