@@ -64,11 +64,11 @@ router.post('/login', async (req, res) => {
 router.get('/currentUser', verifyToken, async (req, res) => {
     try {
         // Optionally, fetch complete user details from the database
-        const user = await User.findById(req.user.id); // Ensure that req.user contains the user ID
+        const user = await User.findById(req.user.id); 
         if (!user) {
             return res.status(404).json({ msg: 'User not found' });
         }
-        res.status(200).json(user); // Send back user details
+        res.status(200).json(user); 
     } catch (error) {
         console.error('Error fetching user details:', error);
         res.status(500).json({ msg: 'Error fetching user details' });
@@ -84,14 +84,14 @@ router.get('/google/callback', passport.authenticate('google', { session: false 
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
     console.log("Generated Token:", token);
 
-    // Set the token in an HTTP-only cookie for security
+    
     res.cookie('access_token', token, {
         httpOnly: true,
-        secure: true, // Set to false if you're testing locally without HTTPS
+        secure: true, 
         sameSite: 'None',
     });
 
-    // Return user details in response as well
+    
     res.status(200).json({
         user: {
             id: user._id,
@@ -104,8 +104,6 @@ router.get('/google/callback', passport.authenticate('google', { session: false 
 });
 
 
-
-// Protected Route Example
 router.get('/protected-route', verifyToken, (req, res) => {
     res.status(200).json({ msg: 'This is a protected route and you are authenticated!' });
 });

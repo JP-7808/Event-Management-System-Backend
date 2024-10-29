@@ -106,21 +106,21 @@ router.post('/:eventId/register', verifyToken, async (req, res) => {
             return res.status(404).json({ msg: 'Event not found' });
         }
 
-        console.log("User ID from req.user:", req.user?.id); // Log to confirm `req.user._id`
+        console.log("User ID from req.user:", req.user?.id); 
 
-        // Check if user ID is valid and not already registered
+        
         if (!req.user?.id || event.attendees.includes(req.user.id)) {
             return res.status(400).json({ msg: 'Already registered for this event or invalid user ID' });
         }
 
-        event.attendees.push(req.user.id); // Add user to attendees
+        event.attendees.push(req.user.id); 
         await event.save();
 
         const updatedEvent = await Event.findById(req.params.eventId).populate('attendees', 'name email');
         res.status(200).json({
             msg: 'Registration successful',
-            attendeeCount: updatedEvent.attendees.length, // Correctly use populated attendees
-            attendees: updatedEvent.attendees // Use populated details
+            attendeeCount: updatedEvent.attendees.length, 
+            attendees: updatedEvent.attendees 
         });
     } catch (err) {
         console.error('Error in registration:', err);
@@ -129,7 +129,7 @@ router.post('/:eventId/register', verifyToken, async (req, res) => {
 });
 
 
-// Get attendees for a specific event
+
 router.get('/:eventId/attendees', verifyToken, async (req, res) => {
     try {
         const event = await Event.findById(req.params.eventId).populate('attendees', 'name email'); // Populate attendee details
@@ -144,16 +144,7 @@ router.get('/:eventId/attendees', verifyToken, async (req, res) => {
     }
 });
 
-// Send notifications to attendees (dummy endpoint for implementation)
-router.post('/:eventId/notifications', verifyToken, async (req, res) => {
-    try {
-        // Logic to send notifications (e.g., via email or in-app notifications)
-        res.status(200).json({ msg: 'Notifications sent' });
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ msg: 'Error sending notifications' });
-    }
-});
+
 
 
 export default router;

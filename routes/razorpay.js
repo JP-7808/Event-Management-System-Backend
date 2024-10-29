@@ -17,7 +17,7 @@ const razorpayInstance = new Razorpay({
 
 // Endpoint to create order
 router.post('/create-order', async (req, res) => {
-    const { amount } = req.body; // Get amount dynamically (e.g., event price)
+    const { amount } = req.body; 
     const options = {
         amount: amount * 100, // Razorpay amount is in paise
         currency: 'INR',

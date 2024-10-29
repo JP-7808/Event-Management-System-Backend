@@ -8,7 +8,7 @@ const router = express.Router();
 // Post a ticket to the database after successful payment
 router.post('/:eventId/ticket', verifyToken, async (req, res) => {
     const { eventId } = req.params;
-    const userId = req.user && req.user.id; // Ensure userId is defined
+    const userId = req.user && req.user.id; 
 
     if (!userId) {
         return res.status(400).json({ message: 'User ID is required' });
@@ -33,7 +33,6 @@ router.post('/:eventId/ticket', verifyToken, async (req, res) => {
 
         await newTicket.save();
 
-        // Add the user to the event's attendees array if not already included
         if (!event.attendees.includes(userId)) {
             event.attendees.push(userId);
             await event.save();
