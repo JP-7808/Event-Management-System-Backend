@@ -19,7 +19,7 @@ passport.use(new GoogleStrategy({
 
         if (user) {
             // If the user exists, return the user and token
-            const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+            const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
             return done(null, { user, token });
         }
 
@@ -32,7 +32,7 @@ passport.use(new GoogleStrategy({
         await user.save();
 
         // Generate JWT token for the new user
-        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+        const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
         // Return new user and token
         return done(null, { user, token });
