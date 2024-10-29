@@ -83,19 +83,12 @@ router.get('/google/callback', passport.authenticate('google', { session: false 
     const { user } = req;
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
 
-    // Send the user data and token to the frontend
+    // Set the token in an HTTP-only cookie for security
     res.cookie('access_token', token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'strict',
-    }).status(200).json({
-        user: {
-            _id: user._id,
-            name: user.name,
-            email: user.email,
-        },
-        token
-    });
+    }).redirect('https://event-management-system-frontend-liart.vercel.app/dashboard'); // Redirect to frontend with dashboard
 });
 
 
