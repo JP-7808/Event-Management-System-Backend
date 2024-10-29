@@ -11,7 +11,7 @@ dotenv.config();
 passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: 'http://localhost:6600/api/auth/google/callback',
+    callbackURL: 'https://event-management-system-backend-00sp.onrender.com/api/auth/google/callback',
 }, async (accessToken, refreshToken, profile, done) => {
     try {
         // Check if a user with the same email already exists
