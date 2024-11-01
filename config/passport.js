@@ -12,31 +12,23 @@ passport.use(new GoogleStrategy(
       callbackURL: "https://event-management-system-backend-00sp.onrender.com/api/auth/google/callback",
     },
     async (accessToken, refreshToken, profile, done) => {
-      try {
-        console.log("Google Profile:", profile);
-
-        // Check if user exists
-        let user = await User.findOne({ email: profile.emails[0].value });
-
-        if (user) {
-          console.log("User exists:", user);
-          return done(null, user); // User found, log in
+        console.log("Google Access Token:", accessToken); // Log access token
+        try {
+          let user = await User.findOne({ email: profile.emails[0].value });
+          if (!user) {
+            // Create a new user if not found
+            user = await new User({
+              name: profile.displayName,
+              email: profile.emails[0].value,
+              password: null // No password needed for Google auth
+            }).save();
+          }
+          done(null, user);
+        } catch (error) {
+          console.error("Error during authentication:", error); // Log error
+          done(error, null);
         }
-
-        // If user doesn't exist, create new user
-        user = new User({
-          googleId: profile.id,
-          name: profile.displayName,
-          email: profile.emails[0].value,
-        });
-        await user.save();
-        console.log("New user created:", user);
-        done(null, user);
-      } catch (error) {
-        console.error("Error in Google OAuth strategy:", error);
-        done(error, null);
       }
-    }
 ));
 
 passport.serializeUser((user, done) => {
