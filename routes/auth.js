@@ -100,17 +100,9 @@ router.get('/google/callback',
             secure: true,
             sameSite: 'None'
         });
-        // Send token and user details to the frontend instead of redirecting
-        res.status(200).json({
-            token,
-            user: {
-                id: req.user._id,
-                name: req.user.name,
-                email: req.user.email
-            }
-        });
+        res.redirect('https://event-management-system-frontend-liart.vercel.app/dashboard');
 
-
+        
     }
 );
 
