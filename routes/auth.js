@@ -95,10 +95,13 @@ router.get('/google/callback',
     passport.authenticate('google', { failureRedirect: '/login' }),
     (req, res) => {
         req.session.save(() => {
+            // Make sure req.user is set correctly and has the user details
+            console.log("User after Google login:", req.user); // Log user details
             res.redirect('https://event-management-system-frontend-liart.vercel.app/dashboard');
         });
     }
 );
+
 
 
 
