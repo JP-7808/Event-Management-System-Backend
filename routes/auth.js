@@ -88,7 +88,31 @@ router.get('/currentUser', verifyToken, async (req, res) => {
 });
 
 // Initiates Google login
-router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
+router.post('/google', async (req, res) => {
+    const { token } = req.body;
+    try {
+        const ticket = await client.verifyIdToken({
+            idToken: token,
+            audience: process.env.GOOGLE_CLIENT_ID,
+        });
+        const { name, email } = ticket.getPayload();
+        let user = await User.findOne({ email });
+
+        // Create user if not exists
+        if (!user) {
+            user = new User({ name, email });
+            await user.save();
+        }
+
+        // Generate JWT token
+        const jwtToken = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+        res.cookie('access_token', jwtToken, { httpOnly: true }); // Set the token in a cookie
+        res.status(200).json({ user });
+    } catch (error) {
+        console.error('Error during Google login:', error);
+        res.status(401).json({ msg: 'Invalid token' });
+    }
+});
 
 // Google callback route
 router.get('/google/callback',
