@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { application } from 'express';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
@@ -94,11 +94,13 @@ router.get('/google', passport.authenticate('google', { scope: ['profile', 'emai
 router.get('/google/callback',
     passport.authenticate('google', { failureRedirect: '/login' }),
     (req, res) => {
-        req.session.save(() => {
-            // Make sure req.user is set correctly and has the user details
-            console.log("User after Google login:", req.user); // Log user details
-            res.redirect('https://event-management-system-frontend-liart.vercel.app/dashboard');
+        const token = jwt.sign({ id: req.user._id }, process.env.JWT_SECRET);
+        res.cookie('access_token', token, {
+            httpOnly: true,
+            secure: true,
+            sameSite: 'None'
         });
+        res.redirect('https://event-management-system-frontend-liart.vercel.app/dashboard');
     }
 );
 
@@ -111,7 +113,7 @@ router.get('/status', (req, res) => {
         res.status(200).json({ isAuthenticated: true, user: req.user });
     } else {
         res.status(401).json({ isAuthenticated: false });
-    }
+    } 
 });
 
 
