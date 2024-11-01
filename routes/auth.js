@@ -110,7 +110,6 @@ router.get('/google/callback',
             }
         });
 
-        res.redirect('https://event-management-system-frontend-liart.vercel.app/dashboard');
 
     }
 );
