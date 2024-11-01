@@ -95,8 +95,6 @@ router.get('/status', (req, res) => {
     }
 });
 
-router.get('/protected-route', verifyToken, (req, res) => {
-    res.status(200).json({ msg: 'This is a protected route and you are authenticated!' });
-});
+
 
 export default router;

@@ -5,17 +5,11 @@ import User from '../models/User.js';
 
 dotenv.config();
 
-// Check if the Google client ID is available
-if (!process.env.GOOGLE_CLIENT_ID) {
-    console.error("Error: GOOGLE_CLIENT_ID is not set in the environment variables.");
-} else {
-    console.log("Google Client ID:", process.env.GOOGLE_CLIENT_ID);  // Print Google Client ID for checking
-}
 
 passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: "https://event-management-system-backend-00sp.onrender.com/auth/google/callback",
+    callbackURL: "https://event-management-system-backend-00sp.onrender.com/api/auth/google/callback",
 },
 async (accessToken, refreshToken, profile, done) => {
     try {
