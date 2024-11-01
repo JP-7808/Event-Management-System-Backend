@@ -91,18 +91,16 @@ router.get('/currentUser', verifyToken, async (req, res) => {
 router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
 
 // Google callback route
-router.get('/google/callback', passport.authenticate('google', { failureRedirect: '/login' }), (req, res) => {
-    const token = jwt.sign({ id: req.user._id }, process.env.JWT_SECRET);
-    const { password, ...otherDetails } = req.user._doc;
+router.get('/google/callback',
+    passport.authenticate('google', { failureRedirect: '/login' }),
+    (req, res) => {
+        const token = jwt.sign({ id: req.user._id }, process.env.JWT_SECRET);
 
-    res.cookie('access_token', token, {
-        httpOnly: true,
-        secure: true,
-        sameSite: 'None'
-    })
-    .status(200)
-    .json({ details: { ...otherDetails }, token });
-});
+        // Redirect to frontend with token in query parameter
+        res.redirect(`https://event-management-system-frontend-liart.vercel.app/dashboard?token=${token}`);
+    }
+);
+
 
 
 
