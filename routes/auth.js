@@ -64,10 +64,12 @@ router.post('/login', async (req, res) => {
 
 // Logout route
 router.post('/logout', (req, res) => {
-    // Since JWTs are stateless, you usually don't need to do much here
-    // Just inform the client to remove the token
-    res.clearCookie('token'); // If you're using cookies to store the token
-    res.status(200).json({ message: 'Logged out successfully' });
+    res.clearCookie('access_token', {
+        httpOnly: true,
+        secure: true,
+        sameSite: 'None'
+    });
+    res.status(200).json({ msg: 'Logged out successfully' });
 });
 
 // Get current user details
