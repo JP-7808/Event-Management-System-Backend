@@ -95,12 +95,14 @@ router.get('/google/callback',
     passport.authenticate('google', { failureRedirect: '/login' }),
     (req, res) => {
         const token = jwt.sign({ id: req.user._id }, process.env.JWT_SECRET);
-
-        // Redirect to frontend with token in query parameter
-        res.redirect(`https://event-management-system-frontend-liart.vercel.app/dashboard?token=${token}`);
+        res.cookie('access_token', token, {
+            httpOnly: true,
+            secure: true,
+            sameSite: 'None'
+        });
+        res.redirect('https://event-management-system-frontend-liart.vercel.app/dashboard');
     }
 );
-
 
 
 

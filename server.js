@@ -30,13 +30,10 @@ mongoose.connection.on("disconnected", () => {
 
 // middleWare
 app.use(cors({
-    origin: ['https://event-management-system-frontend-liart.vercel.app', 'http://localhost:3000'],
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    credentials: true
+    origin: ['https://event-management-system-frontend-liart.vercel.app', 'http://localhost:3000'], // Allow requests from this origin
+    methods: 'GET,POST,PUT,DELETE', 
+    credentials: true, 
 }));
-
-// Handle preflight requests globally
-app.options('*', cors());
 
 app.use(
     session({
