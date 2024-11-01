@@ -99,7 +99,11 @@ router.get('/google/callback',
             httpOnly: true,
             secure: true,
             sameSite: 'None'
-        });
+        })
+        .status(200)
+        .json({ details: { ...otherDetails }, token });
+        
+        // The redirect below should be omitted since you are already sending a JSON response
         res.redirect('https://event-management-system-frontend-liart.vercel.app/dashboard');
     }
 );
