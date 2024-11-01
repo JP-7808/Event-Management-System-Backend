@@ -5,6 +5,8 @@ import User from '../models/User.js';
 
 dotenv.config();
 
+console.log(process.env.GOOGLE_CLIENT_ID)
+console.log(process.env.GOOGLE_CLIENT_SECRET)
 
 passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
@@ -13,23 +15,27 @@ passport.use(new GoogleStrategy({
 },
 async (accessToken, refreshToken, profile, done) => {
     try {
+        console.log("Google Profile:", profile);  // Log profile for debugging
+
+        // Check for an existing user
         const existingUser = await User.findOne({ googleId: profile.id });
         if (existingUser) {
             return done(null, existingUser);
         }
 
+        // If user does not exist, create a new user
         const newUser = await User.create({
             googleId: profile.id,
             name: profile.displayName,
             email: profile.emails[0].value,
         });
-
         done(null, newUser);
     } catch (error) {
-        console.error("Error in Google OAuth:", error);  // Add detailed logging
+        console.error("Error in Google OAuth strategy:", error);  // Log errors
         done(error, null);
     }
 }));
+
 
 
 passport.serializeUser((user, done) => {
