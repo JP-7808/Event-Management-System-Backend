@@ -109,6 +109,9 @@ router.get('/google/callback',
                 email: req.user.email
             }
         });
+
+        res.redirect('https://event-management-system-frontend-liart.vercel.app/dashboard');
+
     }
 );
 
