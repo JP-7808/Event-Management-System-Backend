@@ -14,7 +14,6 @@ passport.use(new GoogleStrategy({
 async (accessToken, refreshToken, profile, done) => {
     try {
         const existingUser = await User.findOne({ googleId: profile.id });
-
         if (existingUser) {
             return done(null, existingUser);
         }
@@ -27,9 +26,11 @@ async (accessToken, refreshToken, profile, done) => {
 
         done(null, newUser);
     } catch (error) {
+        console.error("Error in Google OAuth:", error);  // Add detailed logging
         done(error, null);
     }
 }));
+
 
 passport.serializeUser((user, done) => {
     done(null, user.id);
