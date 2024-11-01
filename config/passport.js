@@ -1,12 +1,9 @@
 import passport from 'passport';
-import dotenv, { config } from 'dotenv';
+import dotenv from 'dotenv';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import User from '../models/User.js';
 
 dotenv.config();
-
-console.log(process.env.GOOGLE_CLIENT_ID)
-console.log(process.env.GOOGLE_CLIENT_SECRET)
 
 passport.use(new GoogleStrategy(
     {
@@ -17,31 +14,30 @@ passport.use(new GoogleStrategy(
     async (accessToken, refreshToken, profile, done) => {
       try {
         console.log("Google Profile:", profile);
-  
-        // Check if a user with the given email already exists
+
+        // Check if user exists
         let user = await User.findOne({ email: profile.emails[0].value });
-  
+
         if (user) {
-          console.log("User exists:", user); // Log existing user info
-          return done(null, user); // Log the user in if they already exist
+          console.log("User exists:", user);
+          return done(null, user); // User found, log in
         }
-  
-        // If user does not exist, create a new one
-        user = await User.create({
+
+        // If user doesn't exist, create new user
+        user = new User({
           googleId: profile.id,
           name: profile.displayName,
           email: profile.emails[0].value,
         });
-        console.log("New user created:", user); // Log new user creation
+        await user.save();
+        console.log("New user created:", user);
         done(null, user);
       } catch (error) {
-        console.error("Error in Google OAuth strategy:", error); // Log errors in detail
+        console.error("Error in Google OAuth strategy:", error);
         done(error, null);
       }
     }
-  ));
-
-
+));
 
 passport.serializeUser((user, done) => {
     done(null, user.id);

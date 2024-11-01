@@ -80,10 +80,13 @@ router.get('/currentUser', verifyToken, async (req, res) => {
 // Initiates Google login
 router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
 
-router.get('/google/callback', passport.authenticate('google', {
-    successRedirect: 'https://event-management-system-frontend-liart.vercel.app',  // Redirect to frontend dashboard
-    failureRedirect: 'https://event-management-system-frontend-liart.vercel.app', // Redirect to frontend login on failure
-}));
+// Google callback route
+router.get('/google/callback',
+    passport.authenticate('google', {
+        failureRedirect: 'https://event-management-system-frontend-liart.vercel.app/dashboard', 
+        successRedirect: 'https://event-management-system-frontend-liart.vercel.app', 
+    })
+);
 
 
 // Check authentication status

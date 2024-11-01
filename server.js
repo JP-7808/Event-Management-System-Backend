@@ -35,16 +35,18 @@ app.use(cors({
     credentials: true, 
 }));
 
-app.use(session({
-    secret: process.env.JWT_SECRET,
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
+app.use(
+    session({
+      secret: process.env.JWT_SECRET,
+      resave: false,
+      saveUninitialized: false,
+      cookie: {
         httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',  // Use secure cookies in production
-        sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax'
-    }
-}));
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
+      },
+    })
+);
 
 app.use(express.json());
 app.use(cookieParser());
