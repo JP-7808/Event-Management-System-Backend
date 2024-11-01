@@ -62,6 +62,14 @@ router.post('/login', async (req, res) => {
     }
 });
 
+// Logout route
+router.post('/logout', (req, res) => {
+    // Since JWTs are stateless, you usually don't need to do much here
+    // Just inform the client to remove the token
+    res.clearCookie('token'); // If you're using cookies to store the token
+    res.status(200).json({ message: 'Logged out successfully' });
+});
+
 // Get current user details
 router.get('/currentUser', verifyToken, async (req, res) => {
     try {
