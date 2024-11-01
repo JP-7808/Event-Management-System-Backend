@@ -12,29 +12,26 @@ passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     callbackURL: "https://event-management-system-backend-00sp.onrender.com/api/auth/google/callback",
-    passReqToCallback: true
 },
 async (accessToken, refreshToken, profile, done) => {
     try {
-        console.log("Google Profile:", profile);  // Log Google profile info
+        console.log("Google Profile:", profile);  // Log profile for debugging
 
         // Check for an existing user
         const existingUser = await User.findOne({ googleId: profile.id });
         if (existingUser) {
-            console.log("User exists:", existingUser);  // Log existing user info
             return done(null, existingUser);
         }
 
-        // Create a new user if one doesn't exist
+        // If user does not exist, create a new user
         const newUser = await User.create({
             googleId: profile.id,
             name: profile.displayName,
             email: profile.emails[0].value,
         });
-        console.log("New user created:", newUser);  // Log new user creation
         done(null, newUser);
     } catch (error) {
-        console.error("Error in Google OAuth strategy:", error);  // Log errors in detail
+        console.error("Error in Google OAuth strategy:", error);  // Log errors
         done(error, null);
     }
 }));
