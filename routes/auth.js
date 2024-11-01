@@ -2,7 +2,8 @@ import express from 'express';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
-import passport from '../config/passport.js';
+import passport from 'passport';
+
 import { verifyToken } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
@@ -75,34 +76,24 @@ router.get('/currentUser', verifyToken, async (req, res) => {
     }
 });
 
-// Google Login Route
+// Redirect user to Google for authentication
 router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
 
-// Google OAuth callback route
-router.get('/google/callback', passport.authenticate('google', { session: false }), (req, res) => {
-    const { user } = req;
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
-    console.log("Generated Token:", token);
+// Google callback route
+router.get('/google/callback', passport.authenticate('google', {
+    successRedirect: 'https://event-management-system-frontend-liart.vercel.app/dashboard',  // Redirect after login success
+    failureRedirect: 'https://event-management-system-frontend-liart.vercel.app',      // Redirect if login fails
+}));
 
-    
-    res.cookie('access_token', token, {
-        httpOnly: true,
-        secure: true, 
-        sameSite: 'None',
-    });
 
-    
-    res.status(200).json({
-        user: {
-            id: user._id,
-            name: user.name,
-            email: user.email,
-            googleId: user.googleId
-        },
-        token: token
-    });
+// Check authentication status
+router.get('/status', (req, res) => {
+    if (req.isAuthenticated()) {
+        res.status(200).json({ isAuthenticated: true, user: req.user });
+    } else {
+        res.status(401).json({ isAuthenticated: false });
+    }
 });
-
 
 router.get('/protected-route', verifyToken, (req, res) => {
     res.status(200).json({ msg: 'This is a protected route and you are authenticated!' });

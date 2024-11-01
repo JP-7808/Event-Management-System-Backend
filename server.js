@@ -1,8 +1,10 @@
 import express from 'express';
+import session from 'express-session';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import passport from 'passport';
+import './config/passport.js'
 import authRoute from './routes/auth.js';
 import eventRoute from './routes/event.js';
 import ticketRoute from './routes/ticket.js'
@@ -33,10 +35,21 @@ app.use(cors({
     credentials: true, 
 }));
 
+app.use(session({
+    secret: process.env.JWT_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',  // Use secure cookies in production
+        sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax'
+    }
+}));
+
 app.use(express.json());
 app.use(cookieParser());
 app.use(passport.initialize());
-
+app.use(passport.session());
 
 // Routes
 app.use('/api/auth', authRoute);

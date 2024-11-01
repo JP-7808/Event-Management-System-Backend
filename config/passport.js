@@ -1,45 +1,51 @@
 import passport from 'passport';
+import dotenv, { config } from 'dotenv';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
-import jwt from 'jsonwebtoken';
-import dotenv from 'dotenv';
 import User from '../models/User.js';
 
 dotenv.config();
 
+// Check if the Google client ID is available
+if (!process.env.GOOGLE_CLIENT_ID) {
+    console.error("Error: GOOGLE_CLIENT_ID is not set in the environment variables.");
+} else {
+    console.log("Google Client ID:", process.env.GOOGLE_CLIENT_ID);  // Print Google Client ID for checking
+}
 
-// Configure Google OAuth strategy
 passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: 'https://event-management-system-backend-00sp.onrender.com/api/auth/google/callback',
-}, async (accessToken, refreshToken, profile, done) => {
+    callbackURL: "https://event-management-system-backend-00sp.onrender.com/auth/google/callback",
+},
+async (accessToken, refreshToken, profile, done) => {
     try {
-        // Check if a user with the same email already exists
-        let user = await User.findOne({ email: profile.emails[0].value });
+        const existingUser = await User.findOne({ googleId: profile.id });
 
-        if (user) {
-            // If the user exists, return the user and token
-            const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
-            return done(null, { user, token });
+        if (existingUser) {
+            return done(null, existingUser);
         }
 
-        // If the user does not exist, create a new user
-        user = new User({
+        const newUser = await User.create({
             googleId: profile.id,
             name: profile.displayName,
             email: profile.emails[0].value,
         });
-        await user.save();
 
-        // Generate JWT token for the new user
-        const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
-
-        // Return new user and token
-        return done(null, { user, token });
+        done(null, newUser);
     } catch (error) {
-        console.error("Error during Google authentication:", error); // Log the error for debugging
-        return done(error, false);
+        done(error, null);
     }
 }));
 
-export default passport;
+passport.serializeUser((user, done) => {
+    done(null, user.id);
+});
+
+passport.deserializeUser(async (id, done) => {
+    try {
+        const user = await User.findById(id);
+        done(null, user);
+    } catch (error) {
+        done(error, null);
+    }
+});
