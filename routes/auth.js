@@ -82,11 +82,14 @@ router.get('/google', passport.authenticate('google', { scope: ['profile', 'emai
 
 // Google callback route
 router.get('/google/callback',
-    passport.authenticate('google', {
-        failureRedirect: 'https://event-management-system-frontend-liart.vercel.app/dashboard', 
-        successRedirect: 'https://event-management-system-frontend-liart.vercel.app', 
-    })
+    passport.authenticate('google', { failureRedirect: '/login' }),
+    (req, res) => {
+        req.session.save(() => {
+            res.redirect('https://event-management-system-frontend-liart.vercel.app/dashboard');
+        });
+    }
 );
+
 
 
 // Check authentication status
