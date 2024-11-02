@@ -26,7 +26,7 @@ router.post('/register', async (req, res) => {
         await user.save();
 
         // Generate Token
-        res.status(200).json(user);
+        res.status(200).send("User has been created, Please Login");
     } catch (err) {
         console.error(err);
         res.status(500).send('Server Error in Creating user');
