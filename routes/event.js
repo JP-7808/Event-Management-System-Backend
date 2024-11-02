@@ -50,7 +50,7 @@ router.get('/:eventId', verifyToken, async (req, res) => {
 // Get attendees for a specific event
 router.get('/:eventId/attendees', verifyToken, async (req, res) => {
     try {
-        const event = await Event.findById(req.params.eventId).populate('attendees'); // Assuming attendees are linked to users
+        const event = await Event.findById(req.params.eventId).populate('attendees'); 
         res.status(200).json(event.attendees);
     } catch (err) {
         console.error(err);
@@ -132,7 +132,7 @@ router.post('/:eventId/register', verifyToken, async (req, res) => {
 
 router.get('/:eventId/attendees', verifyToken, async (req, res) => {
     try {
-        const event = await Event.findById(req.params.eventId).populate('attendees', 'name email'); // Populate attendee details
+        const event = await Event.findById(req.params.eventId).populate('attendees', 'name email'); 
         if (!event) {
             return res.status(404).json({ msg: 'Event not found' });
         }
