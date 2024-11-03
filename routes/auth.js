@@ -109,7 +109,7 @@ router.get('/google/callback',
 
 
 
-// Check authentication status
+// Check authentication status through google
 router.get('/status', (req, res) => {
     if (req.isAuthenticated()) {
         res.status(200).json({ isAuthenticated: true, user: req.user });
